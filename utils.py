@@ -4,6 +4,7 @@ Created on Tue Feb 12 14:20 2019
 @author: ziatdinovmax
 """
 
+import torch
 import numpy as np
 import h5py
 import cv2
