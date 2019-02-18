@@ -117,3 +117,71 @@ def predict(images, model, gpu = False):
     prob = prob.permute(0,2,3,1)
     
     return prob
+
+def find_com(image_data, t = 0.5):
+    '''Returns center of the mass for all the blobs
+       in each channel of network output'''
+    
+    thresh = cv2.threshold(image_data,t,1,cv2.THRESH_BINARY)[1]
+    lbls, nlbls = ndimage.label(thresh)
+    com = np.array(ndimage.center_of_mass(
+        thresh, lbls, np.arange(nlbls)+1))
+    com = com.reshape(com.shape[0],2)
+    return com
+
+def extract_subimages(network_output, com, d, nb_classes, **kwargs):
+    '''Description TBA'''
+    
+    icut = kwargs.get('n')
+    if icut == None:
+        icut = len(com)
+    img_cr_all = np.empty((0, int(d*2), int(d*2), nb_classes))
+    com_ = np.empty((0, 2))
+    for i, c in enumerate(com):
+        cx = int(np.around(c[0]))
+        cy = int(np.around(c[1]))
+        img_cr = np.copy(
+            network_output[0,cx-d:cx+d,cy-d:cy+d,0:nb_classes])
+        if img_cr.shape == (int(d*2), int(d*2), nb_classes):
+            img_cr_all = np.append(img_cr_all, [img_cr], axis = 0)
+            com_ = np.append(com_, [c], axis = 0)
+        if i > icut:
+            return img_cr_all, com_  
+    return img_cr_all, com_
+
+def estimate_nnd(com1, com2, icut = 500):
+    '''Description TBA'''
+    
+    d0 = []
+    for i, c in enumerate(com1):
+        distance = spatial.KDTree(com2).query(c)[0]
+        d0.append(distance)
+        if i > icut:
+            break
+    d0 = np.array(d0)
+    d0 = np.mean(d0) + 0.5*np.std(d0)
+    print('Average nearest-neighbor distance:', np.around(d0))
+    
+    return d0
+
+def estimate_rad(input_image, t = 0.5, icut=500):
+    '''Description TBA'''
+    
+    thresh = cv2.threshold(
+    input_image, t, 1, cv2.THRESH_BINARY)[1]
+    thresh = cv2.convertScaleAbs(thresh)
+    contours = cv2.findContours(
+        thresh.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)[1]
+    ma0 = []
+    for i, cnt in enumerate(contours):
+        area = cv2.contourArea(cnt)
+        if area > 1:
+            _, (m, M), _ = cv2.fitEllipse(cnt)
+            ma0.append(M)
+        if i > icut:
+            break
+    ma0 = np.array(ma0)
+    ma0 = 0.5*np.mean(ma0 + 0.5*np.std(ma0))
+    print('Average blob radius:', np.around(ma0))
+    
+    return ma0
