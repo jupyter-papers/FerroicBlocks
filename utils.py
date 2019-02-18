@@ -8,6 +8,7 @@ import torch
 import numpy as np
 import h5py
 import cv2
+from scipy import ndimage
 
 
 class generate_batches:
