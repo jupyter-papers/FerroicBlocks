@@ -9,6 +9,7 @@ import numpy as np
 import h5py
 import cv2
 from scipy import ndimage
+import scipy.spatial as spatial
 
 
 class generate_batches:
