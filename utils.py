@@ -187,3 +187,10 @@ def estimate_rad(input_image, t = 0.5, icut=500):
     print('Average blob radius:', np.around(ma0))
     
     return ma0
+
+def color_list():
+    '''Returns a list of colors for scatter/line plots'''
+    
+    return ['blue', 'green', 'red', 'magenta',
+            'cyan', 'yellow', 'black', 'darkviolet',
+            'darkorange', 'gold', 'pink']
