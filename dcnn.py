@@ -129,12 +129,12 @@ class upsample_block(nn.Module):
         return self.conv_t(x)
     
     
-class atomsegnet(nn.Module):
+class ferronet(nn.Module):
     '''Builds  a fully convolutional
        neural network model'''
     
     def __init__(self, nb_classes):
-        super(atomsegnet, self).__init__()
+        super(ferronet, self).__init__()
         '''Initiates model parameters'''  
         
         self.c1 = conv2dblock(1, 16)
