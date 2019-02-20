@@ -114,8 +114,8 @@ def predict(images, model, gpu = False):
         prob = model.forward(images)
     if gpu:
         model.cpu()
-        images.cpu()
-        prob.cpu()
+        images = images.cpu()
+        prob = prob.cpu()
     prob = torch.exp(prob)
     prob = prob.permute(0,2,3,1)
     
