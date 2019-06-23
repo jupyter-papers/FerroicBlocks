@@ -17,9 +17,6 @@ END
 }
 
 if test "$1" = "modules"; then
-    echo "\n\nCopying files from FeroNet directory..."
-    cp -r livecode-papers/FerroicBlocks/* .
-    echo "Completed"
     python -c "import torch" 2>/dev/null
     if test $? -ne 0; then
         echo "\n\nDownloading and installing PyTorch-1.0 -->\n"
