@@ -32,6 +32,7 @@ if test "$1" = "modules"; then
     pip install git+https://github.com/szagoruyko/pytorchviz
 elif test "$1" = "dataset"; then
     echo "Downloading training set -->\n"
+    pip install -U gdown
     gdown https://drive.google.com/uc?id=10wo3fWl6lbD0p7S_gJ241BKJ05v6KL2U
 else
     echo "No match found. Use <module> for installation of additional python libraries or <dataset> to download  a training set"
